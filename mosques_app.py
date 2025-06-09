@@ -73,9 +73,10 @@ b64_data = base64.b64encode(d3_json.encode("utf-8")).decode("utf-8")
 with open("mosques_graph.html", "r", encoding="utf-8") as f:
     html_template = f.read()
 
+# Заменяем плейсхолдеры
 html_filled = html_template.replace("{{ b64_data }}", b64_data)
 html_filled = html_filled.replace("{{ popup_bg }}", POPUP_BG_COLOR)
 html_filled = html_filled.replace("{{ popup_text }}", POPUP_TEXT_COLOR)
 
-# === Встраивание HTML-графа ===
+# Вставка в Streamlit
 components.html(html_filled, height=1400, scrolling=False)
