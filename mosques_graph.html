@@ -57,11 +57,18 @@ const svg = d3.select("svg")
     g.attr("transform", event.transform);
   }))
   .on("click", () => {
-    popupNode = null;
-    d3.select("#popup").style("display", "none");
-    node.attr("display", null).attr("opacity", 1).attr("stroke", null).attr("stroke-width", null);
-    link.attr("display", null).attr("stroke", "#322C2E").attr("opacity", 1);
-    labels.attr("display", null).attr("opacity", 1);
+    const connected = new Set();
+    data.links.forEach(link => {
+      if (link.source.id === d.id) connected.add(link.target.id);
+      if (link.target.id === d.id) connected.add(link.source.id);
+    });
+    connected.add(d.id); // сам узел
+    
+    // Скрыть все несвязанные узлы и рёбра
+    node.attr("display", n => connected.has(n.id) ? null : "none");
+    link.attr("display", l => connected.has(l.source.id) && connected.has(l.target.id) ? null : "none");
+    labels.attr("display", n => connected.has(n.id) ? null : "none");
+    edgeLabels.attr("display", l => connected.has(l.source.id) && connected.has(l.target.id) ? null : "none");
   });
 
 const width = window.innerWidth;
