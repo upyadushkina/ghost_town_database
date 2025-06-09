@@ -1,46 +1,81 @@
-
+import streamlit as st
+import streamlit.components.v1 as components
+import pandas as pd
 import json
 import base64
-import pandas as pd
 
-def generate_data(csv_path):
-    df = pd.read_csv(csv_path)
+# === Цветовая схема ===
+PAGE_BG_COLOR = "#262123"
+PAGE_TEXT_COLOR = "#E8DED3"
+GRAPH_BG_COLOR = "#262123"
+GRAPH_LABEL_COLOR = "#E8DED3"
+EDGE_COLOR = "#322C2E"
+HIGHLIGHT_EDGE_COLOR = "#6A50FF"
+TEXT_FONT = "Lexend"
+POPUP_BG_COLOR = "#262123"
+POPUP_TEXT_COLOR = "#E8DED3"
 
-    mosques = df['mosque_name'].unique()
-    decades = df['decade'].unique()
+# === Настройка страницы ===
+st.set_page_config(page_title="Mosques Graph", layout="wide")
+st.markdown(f"""
+  <style>
+    html, body, .stApp {{
+      background-color: {PAGE_BG_COLOR} !important;
+      color: {PAGE_TEXT_COLOR} !important;
+      font-family: '{TEXT_FONT}', sans-serif;
+    }}
+    header, footer {{
+      background-color: {PAGE_BG_COLOR} !important;
+    }}
+  </style>
+""", unsafe_allow_html=True)
 
-    nodes = []
+# === Загрузка и обработка CSV ===
+df = pd.read_csv("mosques_years_graph.csv")
+df.fillna('', inplace=True)
 
-    for mosque in mosques:
+nodes = []
+links = []
+node_ids = set()
+
+def add_node(node_id, label, color):
+    if node_id not in node_ids:
         nodes.append({
-            "id": f"mosque::" + mosque,
-            "label": mosque,
-            "color": "#6A50FF"
+            "id": node_id,
+            "label": label,
+            "color": color
         })
+        node_ids.add(node_id)
 
-    for decade in decades:
-        nodes.append({
-            "id": f"decade::" + str(decade),
-            "label": str(decade),
-            "color": "#4C4646"
-        })
+# === Построение графа ===
+for _, row in df.iterrows():
+    mosque_id = f"mosque::{row['mosque_name']}"
+    decade_id = f"decade::{row['decade']}"
 
-    links = []
-    for _, row in df.iterrows():
-        links.append({
-            "source": f"mosque::" + row['mosque_name'],
-            "target": f"decade::" + str(row['decade']),
-            "event": row['what_happend']
-        })
+    add_node(mosque_id, row['mosque_name'], "#6A50FF")
+    add_node(decade_id, str(row['decade']), "#4C4646")
 
-    graph_data = {
-        "nodes": nodes,
-        "links": links
-    }
+    links.append({
+        "source": mosque_id,
+        "target": decade_id,
+        "event": row['what_happend']
+    })
 
-    b64_data = base64.b64encode(json.dumps(graph_data).encode('utf-8')).decode('utf-8')
-    return b64_data
+graph_data = {
+    "nodes": nodes,
+    "links": links
+}
 
-if __name__ == "__main__":
-    path = "mosques_years_graph.csv"  # путь к вашему CSV
-    print(generate_data(path))
+# === Кодирование данных в base64 и внедрение в шаблон ===
+d3_json = json.dumps(graph_data)
+b64_data = base64.b64encode(d3_json.encode("utf-8")).decode("utf-8")
+
+with open("graph_template.html", "r", encoding="utf-8") as f:
+    html_template = f.read()
+
+html_filled = html_template.replace("{{ b64_data }}", b64_data)
+html_filled = html_filled.replace("{{ popup_bg }}", POPUP_BG_COLOR)
+html_filled = html_filled.replace("{{ popup_text }}", POPUP_TEXT_COLOR)
+
+# === Встраивание HTML-графа ===
+components.html(html_filled, height=1400, scrolling=False)
