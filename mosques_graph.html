@@ -190,6 +190,10 @@ simulation.on("tick", () => {
     .attr("cx", d => d.x)
     .attr("cy", d => d.y);
 
+  labels
+    .attr("x", d => d.x)
+    .attr("y", d => d.y + 8);
+
   if (popupNode) updatePopupPosition(popupNode);
 });
 </script>
