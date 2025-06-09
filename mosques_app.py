@@ -70,7 +70,7 @@ graph_data = {
 d3_json = json.dumps(graph_data)
 b64_data = base64.b64encode(d3_json.encode("utf-8")).decode("utf-8")
 
-with open("graph_template.html", "r", encoding="utf-8") as f:
+with open("mosques_graph.html", "r", encoding="utf-8") as f:
     html_template = f.read()
 
 html_filled = html_template.replace("{{ b64_data }}", b64_data)
