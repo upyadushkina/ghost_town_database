@@ -68,7 +68,13 @@ const width = window.innerWidth;
 const height = window.innerHeight;
 const g = svg.append("g");
 
-<!-- внутри <script> -->
+const simulation = d3.forceSimulation(data.nodes)
+  .force("link", d3.forceLink(data.links).id(d => d.id).distance(80))
+  .force("charge", d3.forceManyBody().strength(-100))
+  .force("center", d3.forceCenter(width / 1.7, height / 4))
+  .force("x", d3.forceX(width / 2).strength(0.2))
+  .force("y", d3.forceY(height / 2).strength(0.2));
+
 const link = g.append("g")
   .selectAll("line")
   .data(data.links)
@@ -85,19 +91,6 @@ const edgeLabels = g.append("g")
   .attr("fill", "#999")
   .attr("text-anchor", "middle")
   .style("font-family", "Lexend");
-
-const simulation = d3.forceSimulation(data.nodes)
-  .force("link", d3.forceLink(data.links).id(d => d.id).distance(80))
-  .force("charge", d3.forceManyBody().strength(-100))
-  .force("center", d3.forceCenter(width / 1.7, height / 4))
-  .force("x", d3.forceX(width / 2).strength(0.2))
-  .force("y", d3.forceY(height / 2).strength(0.2));
-
-const link = g.append("g")
-  .selectAll("line")
-  .data(data.links)
-  .enter().append("line")
-  .attr("stroke", "#322C2E");
 
 const node = g.append("g")
   .selectAll("circle")
@@ -196,10 +189,6 @@ simulation.on("tick", () => {
   node
     .attr("cx", d => d.x)
     .attr("cy", d => d.y);
-
-  labels
-    .attr("x", d => d.x)
-    .attr("y", d => d.y + 8);
 
   if (popupNode) updatePopupPosition(popupNode);
 });
