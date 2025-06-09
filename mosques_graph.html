@@ -68,6 +68,24 @@ const width = window.innerWidth;
 const height = window.innerHeight;
 const g = svg.append("g");
 
+<!-- внутри <script> -->
+const link = g.append("g")
+  .selectAll("line")
+  .data(data.links)
+  .enter().append("line")
+  .attr("stroke", "#322C2E");
+
+const edgeLabels = g.append("g")
+  .selectAll("text")
+  .data(data.links)
+  .enter()
+  .append("text")
+  .text(d => d.event)
+  .attr("font-size", 6)
+  .attr("fill", "#999")
+  .attr("text-anchor", "middle")
+  .style("font-family", "Lexend");
+
 const simulation = d3.forceSimulation(data.nodes)
   .force("link", d3.forceLink(data.links).id(d => d.id).distance(80))
   .force("charge", d3.forceManyBody().strength(-100))
@@ -170,6 +188,10 @@ simulation.on("tick", () => {
     .attr("y1", d => d.source.y)
     .attr("x2", d => d.target.x)
     .attr("y2", d => d.target.y);
+
+  edgeLabels
+    .attr("x", d => (d.source.x + d.target.x) / 2)
+    .attr("y", d => (d.source.y + d.target.y) / 2 - 5);
 
   node
     .attr("cx", d => d.x)
