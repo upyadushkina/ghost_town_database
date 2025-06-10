@@ -62,6 +62,7 @@ const svg = d3.select("svg")
     node.attr("display", null).attr("opacity", 1).attr("stroke", null).attr("stroke-width", null);
     link.attr("display", null).attr("stroke", "#322C2E").attr("opacity", 1);
     labels.attr("display", null).attr("opacity", 1);
+    edgeLabels.attr("display", null); // добавь эту строку!
   });
 
 const width = window.innerWidth;
@@ -99,6 +100,24 @@ const node = g.append("g")
     node.attr("opacity", n => connected.has(n.id) || n.id === d.id ? 1 : 0.5);
     link.attr("stroke", l => (l.source.id === d.id || l.target.id === d.id) ? "#6A50FF" : "#322C2E")
         .attr("opacity", l => (l.source.id === d.id || l.target.id === d.id) ? 1 : 0.2);
+  })
+  .on("click", function(event, d) {
+  event.stopPropagation();
+  popupNode = d;
+
+  // Найдём связанные узлы
+  const connected = new Set();
+  data.links.forEach(link => {
+    if (link.source.id === d.id) connected.add(link.target.id);
+    if (link.target.id === d.id) connected.add(link.source.id);
+  });
+  connected.add(d.id); // включаем сам узел
+
+  // Покажем только связанные элементы
+  node.attr("display", n => connected.has(n.id) ? null : "none");
+  link.attr("display", l => connected.has(l.source.id) && connected.has(l.target.id) ? null : "none");
+  labels.attr("display", n => connected.has(n.id) ? null : "none");
+  edgeLabels.attr("display", l => connected.has(l.source.id) && connected.has(l.target.id) ? null : "none");
   })
   .on("mouseout", function(event, d) {
     if (!popupNode || popupNode.id !== d.id) {
