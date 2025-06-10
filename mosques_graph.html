@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset='utf-8'>
-  <script src='https://d3js.org/d3.v7.min.js'>// </script>
+  <script src='https://d3js.org/d3.v7.min.js'></script>
   <link href='https://fonts.googleapis.com/css2?family=Lexend&display=swap' rel='stylesheet'>
   <style>
     :root {
@@ -39,35 +39,17 @@
       font-size: 14px;
       user-select: text;
       pointer-events: auto;
-    }
-
-    .popup img {
-      max-width: 100%;
-      border-radius: 6px;
-      margin-top: 8px;
-      margin-bottom: 4px;
+      display: none;
     }
   </style>
 </head>
 <body>
-  <!-- <input id="search-input" placeholder="Search artist..." style="
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    padding: 6px 10px;
-    border-radius: 6px;
-    font-family: 'Lexend', sans-serif;
-    border: none;
-    background-color: #4C4646;
-    color: #E8DED3;
-    z-index: 100;
-  " />
-  
+
 <svg></svg>
-// <div id='popup' class='popup' style='display:none;'></div>
-<div id='popup' class='popup' style='user-select: text; -webkit-user-select: text; display: none;'></div>
+<div id='popup' class='popup'></div>
+
 <script>
-const data = JSON.parse(atob('eyJub2RlcyI6IFt7ImlkIjogIm1vc3F1ZTo6QmF0YWwgTW9zcXVlIiwgImxhYmVsIjogIkJhdGFsIE1vc3F1ZSIsICJjb2xvciI6ICIjNkE1MEZGIn0sIHsiaWQiOiAibW9zcXVlOjpTaW5qaXJsaSBNb3NxdWUiLCAibGFiZWwiOiAiU2luamlybGkgTW9zcXVlIiwgImNvbG9yIjogIiM2QTUwRkYifSwgeyJpZCI6ICJtb3NxdWU6OlNoZWhpdGx1ayBNb3NxdWUiLCAibGFiZWwiOiAiU2hlaGl0bHVrIE1vc3F1ZSIsICJjb2xvciI6ICIjNkE1MEZGIn0sIHsiaWQiOiAibW9zcXVlOjpIYXNhbiBQYXNoYSdzIE1vc3F1ZSIsICJsYWJlbCI6ICJIYXNhbiBQYXNoYSdzIE1vc3F1ZSIsICJjb2xvciI6ICIjNkE1MEZGIn0sIHsiaWQiOiAibW9zcXVlOjpLYXJhIE1vc3F1ZSIsICJsYWJlbCI6ICJLYXJhIE1vc3F1ZSIsICJjb2xvciI6ICIjNkE1MEZGIn0sIHsiaWQiOiAibW9zcXVlOjpUdXJiZSBNb3NxdWUiLCAibGFiZWwiOiAiVHVyYmUgTW9zcXVlIiwgImNvbG9yIjogIiM2QTUwRkYifSwgeyJpZCI6ICJtb3NxdWU6OlN1bHRhbiBNdXN0YWZhIE1vc3F1ZSIsICJsYWJlbCI6ICJTdWx0YW4gTXVzdGFmYSBNb3NxdWUiLCAiY29sb3IiOiAiIzZBNTBGRiJ9LCB7ImlkIjogImRlY2FkZTo6MTU4MCIsICJsYWJlbCI6ICIxNTgwIiwgImNvbG9yIjogIiM0QzQ2NDYifSwgeyJpZCI6ICJkZWNhZGU6OjE4NzAiLCAibGFiZWwiOiAiMTg3MCIsICJjb2xvciI6ICIjNEM0NjQ2In0sIHsiaWQiOiAiZGVjYWRlOjoxNjgwIiwgImxhYmVsIjogIjE2ODAiLCAiY29sb3IiOiAiIzRDNDY0NiJ9LCB7ImlkIjogImRlY2FkZTo6MTc2MCIsICJsYWJlbCI6ICIxNzYwIiwgImNvbG9yIjogIiM0QzQ2NDYifSwgeyJpZCI6ICJkZWNhZGU6OjE3ODAiLCAibGFiZWwiOiAiMTc4MCIsICJjb2xvciI6ICIjNEM0NjQ2In0sIHsiaWQiOiAiZGVjYWRlOjoxODMwIiwgImxhYmVsIjogIjE4MzAiLCAiY29sb3IiOiAiIzRDNDY0NiJ9LCB7ImlkIjogImRlY2FkZTo6MTg2MCIsICJsYWJlbCI6ICIxODYwIiwgImNvbG9yIjogIiM0QzQ2NDYifSwgeyJpZCI6ICJkZWNhZGU6OjE1NDAiLCAibGFiZWwiOiAiMTU0MCIsICJjb2xvciI6ICIjNEM0NjQ2In0sIHsiaWQiOiAiZGVjYWRlOjoxNzIwIiwgImxhYmVsIjogIjE3MjAiLCAiY29sb3IiOiAiIzRDNDY0NiJ9LCB7ImlkIjogImRlY2FkZTo6MTczMCIsICJsYWJlbCI6ICIxNzMwIiwgImNvbG9yIjogIiM0QzQ2NDYifSwgeyJpZCI6ICJkZWNhZGU6OjE3NDEiLCAibGFiZWwiOiAiMTc0MSIsICJjb2xvciI6ICIjNEM0NjQ2In0sIHsiaWQiOiAiZGVjYWRlOjoxNTcwIiwgImxhYmVsIjogIjE1NzAiLCAiY29sb3IiOiAiIzRDNDY0NiJ9LCB7ImlkIjogImRlY2FkZTo6MTc0MCIsICJsYWJlbCI6ICIxNzQwIiwgImNvbG9yIjogIiM0QzQ2NDYifSwgeyJpZCI6ICJkZWNhZGU6OjE4MDAiLCAibGFiZWwiOiAiMTgwMCIsICJjb2xvciI6ICIjNEM0NjQ2In0sIHsiaWQiOiAiZGVjYWRlOjoxODIwIiwgImxhYmVsIjogIjE4MjAiLCAiY29sb3IiOiAiIzRDNDY0NiJ9LCB7ImlkIjogImRlY2FkZTo6MTkwMCIsICJsYWJlbCI6ICIxOTAwIiwgImNvbG9yIjogIiM0QzQ2NDYifSwgeyJpZCI6ICJkZWNhZGU6OjE5NDAiLCAibGFiZWwiOiAiMTk0MCIsICJjb2xvciI6ICIjNEM0NjQ2In0sIHsiaWQiOiAiZGVjYWRlOjoxNTUwIiwgImxhYmVsIjogIjE1NTAiLCAiY29sb3IiOiAiIzRDNDY0NiJ9LCB7ImlkIjogImRlY2FkZTo6MTcxMCIsICJsYWJlbCI6ICIxNzEwIiwgImNvbG9yIjogIiM0QzQ2NDYifSwgeyJpZCI6ICJkZWNhZGU6OjE4OTAiLCAibGFiZWwiOiAiMTg5MCIsICJjb2xvciI6ICIjNEM0NjQ2In0sIHsiaWQiOiAiZGVjYWRlOjoxNjAwIiwgImxhYmVsIjogIjE2MDAiLCAiY29sb3IiOiAiIzRDNDY0NiJ9LCB7ImlkIjogImRlY2FkZTo6MTU2MCIsICJsYWJlbCI6ICIxNTYwIiwgImNvbG9yIjogIiM0QzQ2NDYifSwgeyJpZCI6ICJkZWNhZGU6OjE2OTAiLCAibGFiZWwiOiAiMTY5MCIsICJjb2xvciI6ICIjNEM0NjQ2In1dLCAibGlua3MiOiBbeyJzb3VyY2UiOiAibW9zcXVlOjpCYXRhbCBNb3NxdWUiLCAidGFyZ2V0IjogImRlY2FkZTo6MTU4MCIsICJldmVudCI6ICJFc3RhYmxpc2hlZCJ9LCB7InNvdXJjZSI6ICJtb3NxdWU6OkJhdGFsIE1vc3F1ZSIsICJ0YXJnZXQiOiAiZGVjYWRlOjoxODcwIiwgImV2ZW50IjogIkRlbW9saXNoZWQifSwgeyJzb3VyY2UiOiAibW9zcXVlOjpCYXRhbCBNb3NxdWUiLCAidGFyZ2V0IjogImRlY2FkZTo6MTY4MCIsICJldmVudCI6ICJEYW1hZ2VkIn0sIHsic291cmNlIjogIm1vc3F1ZTo6QmF0YWwgTW9zcXVlIiwgInRhcmdldCI6ICJkZWNhZGU6OjE3NjAiLCAiZXZlbnQiOiAiUmVub3ZhdGVkIn0sIHsic291cmNlIjogIm1vc3F1ZTo6QmF0YWwgTW9zcXVlIiwgInRhcmdldCI6ICJkZWNhZGU6OjE3ODAiLCAiZXZlbnQiOiAiRGFtYWdlZCJ9LCB7InNvdXJjZSI6ICJtb3NxdWU6OkJhdGFsIE1vc3F1ZSIsICJ0YXJnZXQiOiAiZGVjYWRlOjoxODMwIiwgImV2ZW50IjogIlJlbm92YXRlZCJ9LCB7InNvdXJjZSI6ICJtb3NxdWU6OkJhdGFsIE1vc3F1ZSIsICJ0YXJnZXQiOiAiZGVjYWRlOjoxODYwIiwgImV2ZW50IjogIkFiYW5kb25lZCJ9LCB7InNvdXJjZSI6ICJtb3NxdWU6OlNpbmppcmxpIE1vc3F1ZSIsICJ0YXJnZXQiOiAiZGVjYWRlOjoxNTQwIiwgImV2ZW50IjogIkVzdGFibGlzaGVkIn0sIHsic291cmNlIjogIm1vc3F1ZTo6U2luamlybGkgTW9zcXVlIiwgInRhcmdldCI6ICJkZWNhZGU6OjE4NzAiLCAiZXZlbnQiOiAiRGVtb2xpc2hlZCJ9LCB7InNvdXJjZSI6ICJtb3NxdWU6OlNpbmppcmxpIE1vc3F1ZSIsICJ0YXJnZXQiOiAiZGVjYWRlOjoxNjgwIiwgImV2ZW50IjogIkRhbWFnZWQifSwgeyJzb3VyY2UiOiAibW9zcXVlOjpTaW5qaXJsaSBNb3NxdWUiLCAidGFyZ2V0IjogImRlY2FkZTo6MTcyMCIsICJldmVudCI6ICJDaGFuZ2VkIGZ1bmN0aW9uIn0sIHsic291cmNlIjogIm1vc3F1ZTo6U2luamlybGkgTW9zcXVlIiwgInRhcmdldCI6ICJkZWNhZGU6OjE3MzAiLCAiZXZlbnQiOiAiQ2hhbmdlZCBmdW5jdGlvbiJ9LCB7InNvdXJjZSI6ICJtb3NxdWU6OlNpbmppcmxpIE1vc3F1ZSIsICJ0YXJnZXQiOiAiZGVjYWRlOjoxNzQxIiwgImV2ZW50IjogIlJlbm92YXRlZCJ9LCB7InNvdXJjZSI6ICJtb3NxdWU6OlNoZWhpdGx1ayBNb3NxdWUiLCAidGFyZ2V0IjogImRlY2FkZTo6MTU3MCIsICJldmVudCI6ICJFc3RhYmxpc2hlZCJ9LCB7InNvdXJjZSI6ICJtb3NxdWU6OlNoZWhpdGx1ayBNb3NxdWUiLCAidGFyZ2V0IjogImRlY2FkZTo6MTcyMCIsICJldmVudCI6ICJDaGFuZ2VkIGZ1bmN0aW9uIn0sIHsic291cmNlIjogIm1vc3F1ZTo6U2hlaGl0bHVrIE1vc3F1ZSIsICJ0YXJnZXQiOiAiZGVjYWRlOjoxNzQwIiwgImV2ZW50IjogIlJlbm92YXRlZCJ9LCB7InNvdXJjZSI6ICJtb3NxdWU6OlNoZWhpdGx1ayBNb3NxdWUiLCAidGFyZ2V0IjogImRlY2FkZTo6MTgzMCIsICJldmVudCI6ICJBYmFuZG9uZWQifSwgeyJzb3VyY2UiOiAibW9zcXVlOjpTaGVoaXRsdWsgTW9zcXVlIiwgInRhcmdldCI6ICJkZWNhZGU6OjE4NzAiLCAiZXZlbnQiOiAiRGVtb2xpc2hlZCJ9LCB7InNvdXJjZSI6ICJtb3NxdWU6Okhhc2FuIFBhc2hhJ3MgTW9zcXVlIiwgInRhcmdldCI6ICJkZWNhZGU6OjE3NDAiLCAiZXZlbnQiOiAiRXN0YWJsaXNoZWQifSwgeyJzb3VyY2UiOiAibW9zcXVlOjpIYXNhbiBQYXNoYSdzIE1vc3F1ZSIsICJ0YXJnZXQiOiAiZGVjYWRlOjoxODAwIiwgImV2ZW50IjogIkRhbWFnZWQifSwgeyJzb3VyY2UiOiAibW9zcXVlOjpIYXNhbiBQYXNoYSdzIE1vc3F1ZSIsICJ0YXJnZXQiOiAiZGVjYWRlOjoxODIwIiwgImV2ZW50IjogIlJlbm92YXRlZCJ9LCB7InNvdXJjZSI6ICJtb3NxdWU6Okhhc2FuIFBhc2hhJ3MgTW9zcXVlIiwgInRhcmdldCI6ICJkZWNhZGU6OjE4NjAiLCAiZXZlbnQiOiAiQWJhbmRvbmVkIn0sIHsic291cmNlIjogIm1vc3F1ZTo6SGFzYW4gUGFzaGEncyBNb3NxdWUiLCAidGFyZ2V0IjogImRlY2FkZTo6MTkwMCIsICJldmVudCI6ICJDaGFuZ2VkIGZ1bmN0aW9uIn0sIHsic291cmNlIjogIm1vc3F1ZTo6SGFzYW4gUGFzaGEncyBNb3NxdWUiLCAidGFyZ2V0IjogImRlY2FkZTo6MTk0MCIsICJldmVudCI6ICJEZW1vbGlzaGVkIn0sIHsic291cmNlIjogIm1vc3F1ZTo6S2FyYSBNb3NxdWUiLCAidGFyZ2V0IjogImRlY2FkZTo6MTU1MCIsICJldmVudCI6ICJFc3RhYmxpc2hlZCJ9LCB7InNvdXJjZSI6ICJtb3NxdWU6OkthcmEgTW9zcXVlIiwgInRhcmdldCI6ICJkZWNhZGU6OjE3MTAiLCAiZXZlbnQiOiAiQ2hhbmdlZCBmdW5jdGlvbiJ9LCB7InNvdXJjZSI6ICJtb3NxdWU6OkthcmEgTW9zcXVlIiwgInRhcmdldCI6ICJkZWNhZGU6OjE3MzAiLCAiZXZlbnQiOiAiUmVub3ZhdGVkIn0sIHsic291cmNlIjogIm1vc3F1ZTo6S2FyYSBNb3NxdWUiLCAidGFyZ2V0IjogImRlY2FkZTo6MTg2MCIsICJldmVudCI6ICJDaGFuZ2VkIGZ1bmN0aW9uIn0sIHsic291cmNlIjogIm1vc3F1ZTo6S2FyYSBNb3NxdWUiLCAidGFyZ2V0IjogImRlY2FkZTo6MTg5MCIsICJldmVudCI6ICJBYmFuZG9uZWQifSwgeyJzb3VyY2UiOiAibW9zcXVlOjpLYXJhIE1vc3F1ZSIsICJ0YXJnZXQiOiAiZGVjYWRlOjoxOTAwIiwgImV2ZW50IjogIkRlbW9saXNoZWQifSwgeyJzb3VyY2UiOiAibW9zcXVlOjpUdXJiZSBNb3NxdWUiLCAidGFyZ2V0IjogImRlY2FkZTo6MTYwMCIsICJldmVudCI6ICJFc3RhYmxpc2hlZCJ9LCB7InNvdXJjZSI6ICJtb3NxdWU6OlR1cmJlIE1vc3F1ZSIsICJ0YXJnZXQiOiAiZGVjYWRlOjoxNzEwIiwgImV2ZW50IjogIkNoYW5nZWQgZnVuY3Rpb24ifSwgeyJzb3VyY2UiOiAibW9zcXVlOjpUdXJiZSBNb3NxdWUiLCAidGFyZ2V0IjogImRlY2FkZTo6MTc0MCIsICJldmVudCI6ICJSZW5vdmF0ZWQifSwgeyJzb3VyY2UiOiAibW9zcXVlOjpUdXJiZSBNb3NxdWUiLCAidGFyZ2V0IjogImRlY2FkZTo6MTg2MCIsICJldmVudCI6ICJDaGFuZ2VkIGZ1bmN0aW9uIn0sIHsic291cmNlIjogIm1vc3F1ZTo6VHVyYmUgTW9zcXVlIiwgInRhcmdldCI6ICJkZWNhZGU6OjE4NzAiLCAiZXZlbnQiOiAiRGVtb2xpc2hlZCJ9LCB7InNvdXJjZSI6ICJtb3NxdWU6OlN1bHRhbiBNdXN0YWZhIE1vc3F1ZSIsICJ0YXJnZXQiOiAiZGVjYWRlOjoxNTYwIiwgImV2ZW50IjogIkVzdGFibGlzaGVkIn0sIHsic291cmNlIjogIm1vc3F1ZTo6U3VsdGFuIE11c3RhZmEgTW9zcXVlIiwgInRhcmdldCI6ICJkZWNhZGU6OjE2ODAiLCAiZXZlbnQiOiAiRGFtYWdlZCJ9LCB7InNvdXJjZSI6ICJtb3NxdWU6OlN1bHRhbiBNdXN0YWZhIE1vc3F1ZSIsICJ0YXJnZXQiOiAiZGVjYWRlOjoxNjkwIiwgImV2ZW50IjogIlJlbm92YXRlZCJ9LCB7InNvdXJjZSI6ICJtb3NxdWU6OlN1bHRhbiBNdXN0YWZhIE1vc3F1ZSIsICJ0YXJnZXQiOiAiZGVjYWRlOjoxNzEwIiwgImV2ZW50IjogIkNoYW5nZWQgZnVuY3Rpb24ifSwgeyJzb3VyY2UiOiAibW9zcXVlOjpTdWx0YW4gTXVzdGFmYSBNb3NxdWUiLCAidGFyZ2V0IjogImRlY2FkZTo6MTczMCIsICJldmVudCI6ICJSZW5vdmF0ZWQifSwgeyJzb3VyY2UiOiAibW9zcXVlOjpTdWx0YW4gTXVzdGFmYSBNb3NxdWUiLCAidGFyZ2V0IjogImRlY2FkZTo6MTg3MCIsICJldmVudCI6ICJEZW1vbGlzaGVkIn1dfQ=='));
+const data = JSON.parse(atob('{{ b64_data }}'));
 let popupNode = null;
 
 const svg = d3.select("svg")
@@ -80,15 +62,10 @@ const svg = d3.select("svg")
     node.attr("display", null).attr("opacity", 1).attr("stroke", null).attr("stroke-width", null);
     link.attr("display", null).attr("stroke", "#322C2E").attr("opacity", 1);
     labels.attr("display", null).attr("opacity", 1);
-    const searchInput = document.getElementById("search-input");
-    if (searchInput) {
-      searchInput.value = "";
-    }
   });
 
 const width = window.innerWidth;
 const height = window.innerHeight;
-
 const g = svg.append("g");
 
 const simulation = d3.forceSimulation(data.nodes)
@@ -97,19 +74,6 @@ const simulation = d3.forceSimulation(data.nodes)
   .force("center", d3.forceCenter(width / 1.7, height / 4))
   .force("x", d3.forceX(width / 2).strength(0.2))
   .force("y", d3.forceY(height / 2).strength(0.2));
-
-
-const edgeLabels = g.append("g")
-  .selectAll("text")
-  .data(data.links)
-  .enter()
-  .append("text")
-  .text(d => d.event)
-  .attr("font-size", 6)
-  .attr("fill", "#999")
-  .attr("text-anchor", "middle")
-  .style("font-family", "Lexend");
-
 
 const link = g.append("g")
   .selectAll("line")
@@ -123,7 +87,6 @@ const node = g.append("g")
   .enter().append("circle")
   .attr("r", 10)
   .attr("fill", d => d.color)
-  .attr("class", "node")
   .call(drag(simulation))
   .on("mouseover", function(event, d) {
     onHover(event, d);
@@ -143,45 +106,6 @@ const node = g.append("g")
     }
     node.attr("opacity", 1);
     link.attr("stroke", "#322C2E").attr("opacity", 1);
-  })
-  .on("click", function(event, d) {
-    event.stopPropagation();
-    popupNode = d;
-    
-    // const firstDegree = new Set();
-    // const secondDegree = new Set();
-    // data.links.forEach(link => {
-    //   if (link.source.id === d.id) firstDegree.add(link.target.id);
-    //   if (link.target.id === d.id) firstDegree.add(link.source.id);
-    // });
-    // data.links.forEach(link => {
-    //   if (firstDegree.has(link.source.id)) secondDegree.add(link.target.id);
-    //   if (firstDegree.has(link.target.id)) secondDegree.add(link.source.id);
-    // });
-    // const allVisible = new Set([d.id, ...firstDegree, ...secondDegree]);
-
-    const firstDegree = new Set();
-    const secondDegree = new Set();
-    data.links.forEach(link => {
-      if (link.source.id === d.id) firstDegree.add(link.target.id);
-      if (link.target.id === d.id) firstDegree.add(link.source.id);
-    });
-    
-    let allVisible;
-    if (d.id.startsWith("artist::")) {
-      data.links.forEach(link => {
-        if (firstDegree.has(link.source.id)) secondDegree.add(link.target.id);
-        if (firstDegree.has(link.target.id)) secondDegree.add(link.source.id);
-      });
-      allVisible = new Set([d.id, ...firstDegree, ...secondDegree]);
-    } else {
-      allVisible = new Set([d.id, ...firstDegree]);
-    }
-    
-    node.attr("display", n => allVisible.has(n.id) ? null : "none");
-    link.attr("display", l => allVisible.has(l.source.id) && allVisible.has(l.target.id) ? null : "none");
-    labels.attr("display", n => allVisible.has(n.id) ? null : "none")
-          .attr("opacity", n => firstDegree.has(n.id) || n.id === d.id ? 1 : 0.5);
   });
 
 const labels = g.append("g")
@@ -197,73 +121,38 @@ const labels = g.append("g")
   .style("font-family", "Lexend");
 
 function drag(simulation) {
-  function dragstarted(event, d) {
-    if (!event.active) simulation.alphaTarget(0.3).restart();
-    d.fx = d.x;
-    d.fy = d.y;
-  }
-  function dragged(event, d) {
-    d.fx = event.x;
-    d.fy = event.y;
-  }
-  function dragended(event, d) {
-    if (!event.active) simulation.alphaTarget(0);
-    d.fx = null;
-    d.fy = null;
-  }
   return d3.drag()
-    .on("start", dragstarted)
-    .on("drag", dragged)
-    .on("end", dragended);
+    .on("start", (event, d) => {
+      if (!event.active) simulation.alphaTarget(0.3).restart();
+      d.fx = d.x;
+      d.fy = d.y;
+    })
+    .on("drag", (event, d) => {
+      d.fx = event.x;
+      d.fy = event.y;
+    })
+    .on("end", (event, d) => {
+      if (!event.active) simulation.alphaTarget(0);
+      d.fx = null;
+      d.fy = null;
+    });
 }
 
 function onHover(event, d) {
   const popup = document.getElementById("popup");
-  let html = "";
-  if (d.id.startsWith("artist::")) {
-    const artist = data.artists[d.id];
-
-    html = `
-      <strong>${artist.name}</strong><br>
-      ${artist.role ? `<div><span style='color: #4C4646;'>${artist.role}</span></div>` : ''}
-      <img src="${artist.photo}" alt="photo"><br>
-      ${(artist.country || artist.city) ? `<div><span style='color: #6A50FF;'>${artist.country}${artist.city ? ', ' + artist.city : ''}</span></div>` : ''}
-
-      ${artist.style ? `<div><span style='color: var(--popup-text);'>styles:</span> <span style='color: #4C4646;'>${artist.style}</span></div>` : ''}
-      ${artist.tool ? `<div><span style='color: var(--popup-text);'>tools:</span> <span style='color: #4C4646;'>${artist.tool}</span></div>` : ''}
-      ${artist.level ? `<div><span style='color: var(--popup-text);'>level:</span> <span style='color: #4C4646;'>${artist.level}</span></div>` : ''}
-    
-      ${artist.telegram ? `<div><span style='color: var(--popup-text);'>telegram:</span> <span style='color: #6A50FF;'>${artist.telegram}</span></div>` : ''}
-      ${artist.email ? `<div><span style='color: var(--popup-text);'>email:</span> <span style='color: #6A50FF;'>${artist.email}</span></div>` : ''}
-`;
-
-  
-  } else {
-    if (d.id.startsWith("seeking for::")) {
-      html = `
-        <div>
-          <span style="color: #4C4646;">seeking for:</span> 
-          <span style="color: var(--popup-text);">${d.label}</span>
-        </div>`;
-    } else {
-      html = `<div><strong>${d.label}</strong></div>`;
-    }
-  }
-  popup.innerHTML = html;
+  popup.innerHTML = `<div><strong>${d.label}</strong></div>`;
   popup.style.display = "block";
   updatePopupPosition(d);
 
-  if (!d.id.startsWith("artist::")) {
-    const connected = new Set();
-    data.links.forEach(link => {
-      if (link.source.id === d.id) connected.add(link.target.id);
-      if (link.target.id === d.id) connected.add(link.source.id);
-    });
+  const connected = new Set();
+  data.links.forEach(link => {
+    if (link.source.id === d.id) connected.add(link.target.id);
+    if (link.target.id === d.id) connected.add(link.source.id);
+  });
 
-    node.attr("opacity", n => connected.has(n.id) || n.id === d.id ? 1 : 0.1);
-    link.attr("stroke", l => (l.source.id === d.id || l.target.id === d.id) ? "#6A50FF" : "#322C2E")
-        .attr("opacity", l => (l.source.id === d.id || l.target.id === d.id) ? 1 : 0.1);
-  }
+  node.attr("opacity", n => connected.has(n.id) || n.id === d.id ? 1 : 0.1);
+  link.attr("stroke", l => (l.source.id === d.id || l.target.id === d.id) ? "#6A50FF" : "#322C2E")
+      .attr("opacity", l => (l.source.id === d.id || l.target.id === d.id) ? 1 : 0.1);
 }
 
 function updatePopupPosition(d) {
@@ -275,11 +164,19 @@ function updatePopupPosition(d) {
   popup.style.top = (y + 15) + "px";
 }
 
-simulation.on("tick", () => {
-  edgeLabels
-    .attr("x", d => (d.source.x + d.target.x) / 2)
-    .attr("y", d => (d.source.y + d.target.y) / 2 - 5);
+// Надписи на рёбрах — тип событий
+const edgeLabels = g.append("g")
+  .selectAll("text")
+  .data(data.links)
+  .enter()
+  .append("text")
+  .text(d => d.event)
+  .attr("font-size", 6)
+  .attr("fill", "#999")
+  .attr("text-anchor", "middle")
+  .style("font-family", "Lexend");
 
+simulation.on("tick", () => {
   link
     .attr("x1", d => d.source.x)
     .attr("y1", d => d.source.y)
@@ -294,20 +191,12 @@ simulation.on("tick", () => {
     .attr("x", d => d.x)
     .attr("y", d => d.y + 8);
 
+  edgeLabels
+  .attr("x", d => (d.source.x + d.target.x) / 2)
+  .attr("y", d => (d.source.y + d.target.y) / 2 - 5);
+
   if (popupNode) updatePopupPosition(popupNode);
 });
-
-document.getElementById("search-input").addEventListener("input", (e) => {
-  const query = e.target.value.toLowerCase();
-  node.attr("stroke", d => {
-    return d.id.startsWith("artist::") && d.label.toLowerCase().includes(query)
-      ? "#6A50FF" : null;
-  });
-  node.attr("stroke-width", d => {
-    return d.id.startsWith("artist::") && d.label.toLowerCase().includes(query)
-      ? 3 : null;
-  });
-});
-// </script>
+</script>
 </body>
 </html>
