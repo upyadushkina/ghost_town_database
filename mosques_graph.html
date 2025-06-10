@@ -81,11 +81,11 @@ const svg = d3.select("svg")
     node.attr("display", null).attr("opacity", 1).attr("stroke", null).attr("stroke-width", null);
     link.attr("display", null).attr("stroke", "#322C2E").attr("opacity", 1);
     labels.attr("display", null).attr("opacity", 1);
-  edgeLabels.attr("display", null);
     const searchInput = document.getElementById("search-input");
     if (searchInput) {
       searchInput.value = "";
     }
+    edgeLabels.attr("display", null);
   });
 
 const width = window.innerWidth;
@@ -143,15 +143,14 @@ const node = g.append("g")
     if (link.source.id === d.id) connected.add(link.target.id);
     if (link.target.id === d.id) connected.add(link.source.id);
   });
-  connected.add(d.id);
+  connected.add(d.id); // включаем сам узел
 
+  // Покажем только связанные элементы
   node.attr("display", n => connected.has(n.id) ? null : "none");
   link.attr("display", l => connected.has(l.source.id) && connected.has(l.target.id) ? null : "none");
   labels.attr("display", n => connected.has(n.id) ? null : "none");
   edgeLabels.attr("display", l => connected.has(l.source.id) && connected.has(l.target.id) ? null : "none");
-})
-
-  });
+});
 
 const labels = g.append("g")
   .selectAll("text")
